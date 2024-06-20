@@ -37,4 +37,22 @@ public class Medico {
         this.endereco = new Endereco(dadosCadastroMedico.dadosEndereco());
 
     }
+
+    public void atualizarInformacoes(DadosAtualizacaoMedico dadosAtualizacaoMedico) {
+        // como atualizacao e algo opcional, se nao tratarmos o que se recebe da dto, teremos o valor nulo
+        // pois no json se nao enviarmos os campos, o spring retorna os valores como nulo
+        if(dadosAtualizacaoMedico.nome() != null){
+            this.nome = dadosAtualizacaoMedico.nome();
+        }
+        if(dadosAtualizacaoMedico.email() != null){
+            this.email = dadosAtualizacaoMedico.email();
+        }
+        if(dadosAtualizacaoMedico.telefone() != null){
+            this.telefone = dadosAtualizacaoMedico.telefone();
+        }
+        if(dadosAtualizacaoMedico.endereco() != null){
+            this.endereco.atualizarEndereco(dadosAtualizacaoMedico.endereco());
+        }
+
+    }
 }
