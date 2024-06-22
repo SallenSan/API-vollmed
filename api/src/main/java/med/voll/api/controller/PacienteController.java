@@ -1,10 +1,7 @@
 package med.voll.api.controller;
 
 import jakarta.validation.Valid;
-import med.voll.api.paciente.DadosCadastroPaciente;
-import med.voll.api.paciente.DadosListagemPaciente;
-import med.voll.api.paciente.Paciente;
-import med.voll.api.paciente.PacienteRepository;
+import med.voll.api.paciente.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +18,7 @@ public class PacienteController {
 
     @PostMapping
     @Transactional
-    public void cadastrarPaciente(@RequestBody @Valid DadosCadastroPaciente dadosCadastroPaciente){
+    public void cadastrar(@RequestBody @Valid DadosCadastroPaciente dadosCadastroPaciente){
         pacienteRepository.save(new Paciente(dadosCadastroPaciente));
 
     }
@@ -31,7 +28,22 @@ public class PacienteController {
     // usaremos uma DTO chamada DadosListagemMedico onde convertera o medico para listagem, contendo apenas os dados necessarios
     @GetMapping
     public Page<DadosListagemPaciente> listar(Pageable paginacao){
-        return pacienteRepository.findAll(paginacao).map(DadosListagemPaciente::new);
+        return pacienteRepository.findAllByAtivosTrue(paginacao).map(DadosListagemPaciente::new);
+
+    }
+
+    @PutMapping
+    @Transactional
+    public void atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dadosAtualizacaoPaciente){
+        var paciente = pacienteRepository.getReferenceById(dadosAtualizacaoPaciente.id());
+        paciente.atualizarInformacoes(dadosAtualizacaoPaciente);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void deletar(@PathVariable Long id){
+        var paciente = pacienteRepository.getReferenceById(id);
+        paciente.desativar();
 
     }
 
